@@ -1,0 +1,24 @@
+<!doctype html><html lang="fa" dir="rtl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>چالش هوش</title><style>
+body{margin:0;background:radial-gradient(#174b94,#07152f);color:white;font-family:tahoma;text-align:center}.app{max-width:520px;margin:auto;padding:15px}.card{background:#0a1e46;border:1px solid #3979cf;border-radius:22px;padding:18px;margin:12px 0}.gold{color:#ffd447}button{border:0;border-radius:13px;padding:15px;margin:5px;background:#2058b2;color:white;font-size:20px;font-weight:bold}button:disabled{opacity:.4}.answers{display:grid;grid-template-columns:repeat(4,1fr)}.tile{font-size:28px;padding:16px;background:#eaf2ff;color:#142957;border-radius:12px;margin:5px}.blank{background:#ffd447}.progress{height:8px;background:#29436d}.bar{height:8px;background:#20d477}footer{font-size:13px;color:#b8c9e8;margin:22px}</style>
+<div class="app"><div class="card">🏆 امتیاز <span id="score">۰</span>　|　مرحله <span id="level">۱</span>/۱۰۰</div><h1 class="gold">🧠 چالش هوش</h1><p>فکر کن • کشف کن • پیشرفت کن</p>
+<div id="home" class="card"><h2>آماده‌ای؟</h2><p>۱۰۰ مرحله با سختی افزایشی</p><button onclick="start()">شروع بازی ▶</button><button onclick="resume()">ادامه بازی</button></div>
+<div id="game" class="card" style="display:none"><div class="progress"><div class="bar" id="bar"></div></div><h3 id="type">الگوی عددی</h3><p id="q"></p><div id="board"></div><div class="answers" id="answers"></div><p id="msg" class="gold"></p><button onclick="hint()">💡 راهنما</button><button onclick="home()">منو</button></div>
+<footer>طراحی و توسعه بازی: <b>مرتضی بحرینی</b></footer></div>
+<script>
+const fa=n=>String(n).replace(/[0-9]/g,x=>'۰۱۲۳۴۵۶۷۸۹'[x]),$=x=>document.getElementById(x);let level=1,score=0,p;
+function save(){localStorage.hoosh=JSON.stringify({level,score});top()}
+function top(){$('score').textContent=fa(score);$('level').textContent=fa(level)}
+function start(){level=1;score=0;save();$('home').style.display='none';$('game').style.display='block';next()}
+function resume(){try{let s=JSON.parse(localStorage.hoosh);level=s.level;score=s.score}catch{}top();$('home').style.display='none';$('game').style.display='block';next()}
+function home(){$('home').style.display='block';$('game').style.display='none';save()}
+function next(){let a=2+Math.floor(Math.random()*8),d=1+Math.floor(Math.random()*(1+level/10));let kind=(level-1)%4,arr,ans,desc;
+if(kind===0){arr=[a,a+d,a+2*d,a+3*d];ans=a+4*d;desc='عدد بعدی دنباله چیست؟'}
+if(kind===1){arr=[a,a*2,a*2+3,a*2+6];ans=a*2+9;desc='قانون افزایش را پیدا کن'}
+if(kind===2){arr=[a,a+2,a+6,a+12];ans=a+20;desc='الگوی اختلاف‌ها را کشف کن'}
+if(kind===3){arr=[a*2,a*3,a*4,a*5];ans=a*6;desc='عدد گمشده را پیدا کن'}
+p=ans;$('q').textContent=desc;$('board').innerHTML=arr.map(x=>'<span class="tile">'+fa(x)+'</span>').join('')+'<span class="tile blank">؟</span>';
+let set=new Set([ans]);while(set.size<4)set.add(Math.max(1,ans+Math.floor(Math.random()*15)-7));$('answers').innerHTML=[...set].sort(()=>Math.random()-.5).map(x=>'<button onclick="choose('+x+',this)">'+fa(x)+'</button>').join('');$('msg').textContent='';$('bar').style.width=(level-1)+'%';$('type').textContent=['دنباله عددی','منطق افزایشی','اختلاف‌ها','ضرب'][kind];top()}
+function choose(x,b){if(x===p){score+=10;level=Math.min(100,level+1);$('msg').textContent='آفرین! پاسخ درست 🎉';$('board').lastChild.textContent=fa(x);save();$('answers').querySelectorAll('button').forEach(y=>y.disabled=true);setTimeout(()=>level<=100?next():$('msg').textContent='تبریک، تمام مراحل را بردی!',800)}else{$('msg').textContent='دوباره تلاش کن!';b.disabled=true}}
+function hint(){score=Math.max(0,score-2);$('msg').textContent='به اختلاف بین اعداد یا رابطه ضرب توجه کن. (۲ امتیاز کم شد)';save()}
+try{let s=JSON.parse(localStorage.hoosh);level=s.level||1;score=s.score||0}catch{}top()
+</script></html>

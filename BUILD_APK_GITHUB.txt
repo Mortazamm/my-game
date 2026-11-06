@@ -1,0 +1,8 @@
+راهنمای ساخت APK با GitHub Actions:
+۱) یک Repository جدید در GitHub بسازید.
+۲) تمام محتویات این پوشه (از جمله .github) را آپلود کنید.
+۳) تب Actions را باز کنید و workflow با نام Build Android APK را انتخاب کنید.
+۴) Run workflow را بزنید.
+۵) پس از پایان موفق، Artifact با نام ChallangeHoosh-debug-apk را دانلود کنید.
+۶) ZIP Artifact را باز کرده و app-debug.apk را روی اندروید نصب کنید.
+این خروجی APK آزمایشی (debug) است.
